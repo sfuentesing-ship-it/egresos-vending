@@ -1,0 +1,5 @@
+{
+  "tenant": "vendingstore",
+  "cookie": "PEGAR_AQUI_EL_VALOR_DEL_HEADER_Cookie",
+  "csrf": "PEGAR_AQUI_EL_TOKEN_CSRF"
+}

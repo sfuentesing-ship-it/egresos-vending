@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: egresos-vending
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: python app.py
+    envVars:
+      - key: TENANT
+        value: vendingstore
+      - key: PARROTFY_COOKIE
+        sync: false
+      - key: PARROTFY_CSRF
+        sync: false
+      - key: APP_USER
+        sync: false
+      - key: APP_PASSWORD
+        sync: false
