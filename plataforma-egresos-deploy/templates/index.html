@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Egresos Bodega | Vending Store</title>
+<title>Bodega Vending | Vending Store</title>
 <style>
   :root {
     --bg: #0b1120; --card: #161f33; --card2: #1b2740; --accent: #2dd4bf;
@@ -35,7 +35,7 @@
   .bar-row .fill { height: 100%; border-radius: 4px; }
   .bar-row .amt { width: 90px; text-align: right; font-size: 13px; }
   .chart { display: flex; align-items: flex-end; gap: 4px; height: 220px; border-bottom: 1px solid #33415e; padding-bottom: 4px; }
-  .chart .col { flex: 1; background: var(--accent); border-radius: 4px 4px 0 0; min-width: 4px; position: relative; }
+  .chart .col { flex: 1 1 0; max-width: 36px; background: var(--accent); border-radius: 4px 4px 0 0; min-width: 4px; position: relative; }
   .chart .col span { position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); font-size: 10px; color: var(--muted); white-space: nowrap; display: none; }
   .chart .col:hover span { display: block; }
   .xaxis { display: flex; justify-content: space-between; color: var(--muted); font-size: 10px; margin-top: 6px; }
@@ -55,21 +55,51 @@
   .guia th { text-align: left; color: #fff; background: #7f1d1d; padding: 10px 8px; }
   .guia td { padding: 10px 8px; border-bottom: 1px solid #33415e; vertical-align: top; }
   .guia tr:hover td { background: var(--card2); }
+  #tabla td, #tabla th, #tablaIng td, #tablaIng th, #tablaStock td, #tablaStock th { padding: 10px 16px; }
+  #tablaStock th:nth-child(2), #tablaStock td:nth-child(2) { text-align: right; padding-right: 28px; }
+  #tablaStock th:nth-child(3), #tablaStock td:nth-child(3) { padding-left: 28px; min-width: 150px; }
+  .tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+  .tab { background: transparent; border: 1px solid #33415e; color: var(--muted); padding: 8px 22px; border-radius: 20px; cursor: pointer; font-weight: 600; letter-spacing: 1px; font-size: 13px; }
+  .tab.active { background: #1e3a8a; border-color: #3b82f6; color: #fff; }
+  #tablaIng tbody tr { cursor: pointer; }
+  #tablaIng tbody tr:hover { background: var(--card2); }
+  .search { background: var(--card); border: 1px solid #33415e; color: var(--text); padding: 8px 12px; border-radius: 8px; width: 220px; }
 </style>
 </head>
 <body>
-  <h1>Egresos de Bodega · Parrotfy</h1>
-  <div class="banner">Actualización automática cada 4 horas · Los datos se cargan desde Parrofy (movimiento tipo Egreso, Bodega Vending). Usa el botón "Consultar" para forzar una actualización.</div>
+  <h1>Bodega Vending · Parrotfy</h1>
+  <div class="tabs">
+    <button class="tab active" id="tabEgresos" onclick="cambiarVista('egresos')">EGRESOS</button>
+    <button class="tab" id="tabIngresos" onclick="cambiarVista('ingresos')">INGRESOS</button>
+    <button class="tab" id="tabStock" onclick="cambiarVista('stock')">STOCK DE PRODUCTOS</button>
+  </div>
+  <div class="banner">Actualización automática cada 4 horas · Los datos se cargan desde Parrofy (Bodega Vending). Usa el botón "Consultar" para forzar una actualización.</div>
 
   <div class="controls">
     <div><label>Día de consulta</label><input type="date" id="hoy"></div>
-    <div><label>Reponedor</label>
+    <div id="boxReponedor"><label>Reponedor</label>
       <select id="reponedor" onchange="load()"><option value="">Todos los reponedores</option></select>
+    </div>
+    <div id="boxBuscar" style="display:none"><label>Buscar producto</label>
+      <input class="search" id="buscar" placeholder="Ej: coca cola" oninput="renderIngresos()">
+    </div>
+    <div id="boxBuscarStock" style="display:none"><label>Buscar producto</label>
+      <input class="search" id="buscarStock" placeholder="Ej: coca cola" oninput="renderStock()">
+    </div>
+    <div id="boxFiltroStock" style="display:none"><label>Mostrar</label>
+      <select id="filtroStock" onchange="renderStock()">
+        <option value="todos">Todos los productos con stock</option>
+        <option value="criticos">Solo críticos (menos de 20)</option>
+        <option value="lista">Solo productos de tu lista</option>
+        <option value="sin">Sin stock (de tu lista)</option>
+      </select>
     </div>
     <button class="btn" onclick="load(true)">Consultar</button>
     <button class="btn ghost" onclick="goToday()">Ir a hoy</button>
     <span id="updated"></span>
   </div>
+
+  <div id="vistaEgresos">
 
   <div class="cards">
     <div class="card"><h3>Egresado hoy</h3><div class="value green" id="kHoy">$0</div><div class="sub" id="kHoySub"></div></div>
@@ -95,6 +125,13 @@
   <div class="panel" style="margin-top:16px">
     <h2>DETALLE DE EGRESOS</h2>
     <div class="sub">Haz clic en un egreso para ver la guía de venta con todos los productos</div>
+    <div class="controls" style="margin:12px 0">
+      <div><label>Desde</label><input type="date" id="egrDesde"></div>
+      <div><label>Hasta</label><input type="date" id="egrHasta"></div>
+      <button class="btn" onclick="renderTablaEgresos()">Filtrar</button>
+      <button class="btn ghost" onclick="limpiarFiltro('egr')">Limpiar</button>
+      <span id="egrCount" style="color:var(--muted);font-size:12px"></span>
+    </div>
     <table style="width:100%;border-collapse:collapse;font-size:13px" id="tabla">
       <thead><tr style="color:var(--muted);text-align:left">
         <th>Fecha</th><th>Creado</th><th>Documento</th><th>Productos</th><th>Unidades</th><th style="text-align:right">Total</th>
@@ -102,6 +139,55 @@
       <tbody></tbody>
     </table>
   </div>
+  </div><!-- /vistaEgresos -->
+
+  <div id="vistaIngresos" style="display:none">
+    <div class="cards">
+      <div class="card"><h3>Ingresado hoy</h3><div class="value green" id="iHoy">$0</div><div class="sub" id="iHoySub"></div></div>
+      <div class="card"><h3>Mes actual</h3><div class="value" id="iMes">$0</div><div class="sub" id="iMesSub"></div></div>
+      <div class="card"><h3>Productos ingresados</h3><div class="value" id="iProd">0</div><div class="sub">Unidades que entraron en el día</div></div>
+      <div class="card"><h3>Número de ingresos</h3><div class="value" id="iN">0</div><div class="sub" id="iNSub"></div></div>
+    </div>
+    <div class="panel">
+      <h2>PRODUCTOS QUE INGRESARON A BODEGA</h2>
+      <div class="sub">Haz clic en una línea para ver el documento completo · <span id="iCount"></span></div>
+      <div class="controls" style="margin:12px 0">
+        <div><label>Desde</label><input type="date" id="ingDesde"></div>
+        <div><label>Hasta</label><input type="date" id="ingHasta"></div>
+        <button class="btn" onclick="renderIngresos()">Filtrar</button>
+        <button class="btn ghost" onclick="limpiarFiltro('ing')">Limpiar</button>
+      </div>
+      <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:13px" id="tablaIng">
+          <thead><tr style="color:var(--muted);text-align:left">
+            <th>Fecha</th><th>Producto</th><th>Documento</th><th>Usuario</th><th style="text-align:right">Valor unitario</th><th style="text-align:right">Ingreso</th><th style="text-align:right">Disponible</th><th style="text-align:right">Saldo</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div><!-- /vistaIngresos -->
+
+  <div id="vistaStock" style="display:none">
+    <div class="cards">
+      <div class="card"><h3>Productos con stock</h3><div class="value" id="sTotal">0</div><div class="sub">en Bodega Vending (se actualiza solo)</div></div>
+      <div class="card"><h3>Estado crítico de stock</h3><div class="value" style="color:#f87171" id="sCrit">0</div><div class="sub" id="sCritSub">menos de 20 unidades</div></div>
+      <div class="card"><h3>Sin stock (tu lista)</h3><div class="value" style="color:#fb923c" id="sCero">0</div><div class="sub" id="sCeroSub">productos de tu lista en 0</div></div>
+      <div class="card"><h3>Unidades totales</h3><div class="value green" id="sUni">0</div><div class="sub" id="sNuevosSub"></div></div>
+    </div>
+    <div class="panel">
+      <h2>STOCK DE PRODUCTOS</h2>
+      <div class="sub">Todos los productos con stock en Bodega Vending · los productos nuevos aparecen automáticamente · <span id="sUpdated"></span></div>
+      <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:13px" id="tablaStock">
+          <thead><tr style="color:var(--muted);text-align:left">
+            <th>Producto</th><th style="text-align:right">Stock</th><th>Estado</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div><!-- /vistaStock -->
 
   <div class="modal-overlay" id="modal">
     <div class="modal-box">
@@ -137,15 +223,63 @@
 
 <script>
 const fmt = n => '$' + Math.round(n).toLocaleString('es-CL');
+const fmtQ = n => Math.round(n).toLocaleString('es-CL');
 const COLORS = ['#a78bfa','#60a5fa','#fbbf24','#2dd4bf','#f472b6','#34d399','#fb923c','#e879f9'];
-const BANNER = 'Actualización automática cada 4 horas · Los datos se cargan desde Parrofy (movimiento tipo Egreso, Bodega Vending). Usa el botón "Consultar" para forzar una actualización.';
+const BANNER = 'Actualización automática cada 4 horas · Los datos se cargan desde Parrofy (Bodega Vending). Usa el botón "Consultar" para forzar una actualización.';
 
 const toDMY = iso => { const [y,m,d] = iso.split('-'); return `${d}/${m}/${y}`; };
 const parseDMY = s => { const [d,m,y] = s.split('/'); return { d:+d, m:+m, y:+y }; };
 
+let vista = 'egresos';
+let datosIng = null;
+let datosEgr = null;
+let datosStock = null;
+
+function enRango(fechaDMY, desdeIso, hastaIso){
+  if (!desdeIso && !hastaIso) return true;
+  const p = parseDMY(fechaDMY);
+  const iso = p.y + '-' + String(p.m).padStart(2,'0') + '-' + String(p.d).padStart(2,'0');
+  if (desdeIso && iso < desdeIso) return false;
+  if (hastaIso && iso > hastaIso) return false;
+  return true;
+}
+
+function limpiarFiltro(prefix){
+  document.getElementById(prefix + 'Desde').value = '';
+  document.getElementById(prefix + 'Hasta').value = '';
+  if (prefix === 'egr') renderTablaEgresos(); else renderIngresos();
+}
+
+function cambiarVista(v){
+  vista = v;
+  document.getElementById('tabEgresos').classList.toggle('active', v === 'egresos');
+  document.getElementById('tabIngresos').classList.toggle('active', v === 'ingresos');
+  document.getElementById('tabStock').classList.toggle('active', v === 'stock');
+  document.getElementById('vistaEgresos').style.display = v === 'egresos' ? '' : 'none';
+  document.getElementById('vistaIngresos').style.display = v === 'ingresos' ? '' : 'none';
+  document.getElementById('vistaStock').style.display = v === 'stock' ? '' : 'none';
+  document.getElementById('boxReponedor').style.display = v === 'egresos' ? '' : 'none';
+  document.getElementById('boxBuscar').style.display = v === 'ingresos' ? '' : 'none';
+  document.getElementById('boxBuscarStock').style.display = v === 'stock' ? '' : 'none';
+  document.getElementById('boxFiltroStock').style.display = v === 'stock' ? '' : 'none';
+  document.getElementById('hoy').parentElement.style.display = v === 'stock' ? 'none' : '';
+  load();
+}
+
 function goToday(){ document.getElementById('hoy').value = new Date().toISOString().slice(0,10); load(); }
 
+function bannerError(msg){
+  document.querySelector('.banner').innerHTML = '<span class="error">' + msg + '</span>';
+  document.getElementById('updated').textContent = '';
+}
+
 async function load(force){
+  if (vista === 'egresos') return loadEgresos(force);
+  if (vista === 'stock') return loadStock(force);
+  return loadIngresos(force);
+}
+
+async function loadEgresos(force){
   const hoyIso = document.getElementById('hoy').value || new Date().toISOString().slice(0,10);
   const rep = document.getElementById('reponedor').value;
   const banner = document.querySelector('.banner');
@@ -155,16 +289,12 @@ async function load(force){
     const r = await fetch(`/api/resumen?hoy=${hoyIso}` + (force ? '&refresh=1' : ''), { cache: 'no-store' });
     d = await r.json();
     if(d.error){
-      banner.innerHTML = r.status === 401
-        ? '<span class="error">Sesión de Parrotfy expirada. Actualiza la cookie y el csrf en config.json y reinicia el servidor.</span>'
-        : '<span class="error">Error: '+d.error+'</span>';
-      document.getElementById('updated').textContent = '';
-      return;
+      return bannerError(r.status === 401
+        ? 'Sesión de Parrotfy expirada. Hay que actualizar la cookie en Render.'
+        : 'Error: ' + d.error);
     }
   } catch(e) {
-    banner.innerHTML = '<span class="error">No se pudo conectar con el servidor local. Verifica que la plataforma esté corriendo.</span>';
-    document.getElementById('updated').textContent = '';
-    return;
+    return bannerError('No se pudo conectar con el servidor. Intenta de nuevo en unos segundos.');
   }
   banner.textContent = d.aviso ? '⚠ ' + d.aviso : BANNER;
 
@@ -190,11 +320,9 @@ async function load(force){
     : hoyList.length + ' de ' + repsHoy + ' reponedores con retiros en el día';
   document.getElementById('updated').textContent = 'Actualizado: ' + new Date().toLocaleTimeString('es-CL');
 
-  // selector de reponedor
   const sel = document.getElementById('reponedor');
   sel.innerHTML = '<option value="">Todos los reponedores</option>' + d.participacion.map(p=>`<option ${p.nombre===rep?'selected':''}>${p.nombre}</option>`).join('');
 
-  // participación mensual (solo el reponedor seleccionado si hay uno)
   const participacion = rep ? d.participacion.filter(p=>p.nombre===rep) : d.participacion;
   const maxP = Math.max(...participacion.map(p=>p.total), 1);
   document.getElementById('participacion').innerHTML = participacion.map((p,i)=>`
@@ -202,7 +330,6 @@ async function load(force){
       <div class="track"><div class="fill" style="width:${p.total/maxP*100}%;background:${COLORS[i%COLORS.length]}"></div></div>
       <div class="amt">${fmt(p.total)}</div></div>`).join('');
 
-  // egresos diarios (últimos 30 días, filtrados por reponedor)
   const porDia = {};
   d.egresos.filter(matchRep).forEach(e => { porDia[e.fecha] = (porDia[e.fecha]||0) + e.total; });
   const dias = Object.keys(porDia).sort((a,b)=>{ const pa=parseDMY(a), pb=parseDMY(b); return (pa.y-pb.y)||(pa.m-pb.m)||(pa.d-pb.d); }).slice(-30);
@@ -213,10 +340,118 @@ async function load(force){
   document.getElementById('kAvg').textContent = fmt(daily.length ? daily.reduce((s,x)=>s+x.total,0)/daily.length : 0);
   document.getElementById('hastaLabel').textContent = hoyIso;
 
-  document.querySelector('#tabla tbody').innerHTML = d.egresos.filter(matchRep).map(e=>`
+  document.querySelector('#tabla tbody').innerHTML = '';
+  datosEgr = d;
+  renderTablaEgresos();
+}
+
+function renderTablaEgresos(){
+  if (!datosEgr) return;
+  const rep = document.getElementById('reponedor').value;
+  const desde = document.getElementById('egrDesde').value;
+  const hasta = document.getElementById('egrHasta').value;
+  const rows = datosEgr.egresos.filter(e => (!rep || e.documento === rep) && enRango(e.fecha, desde, hasta));
+  document.getElementById('egrCount').textContent = rows.length + ' egresos en el rango';
+  document.querySelector('#tabla tbody').innerHTML = rows.map(e=>`
     <tr style="border-top:1px solid #33415e" onclick="verEgreso(${e.group_id})" title="Ver guía de venta">
       <td>${e.fecha}</td><td>${e.creado||''}</td><td>${e.documento}</td><td>${e.n_productos}</td><td>${Math.round(e.unidades||0)}</td>
       <td style="text-align:right">${fmt(e.total)}</td></tr>`).join('');
+}
+
+async function loadIngresos(force){
+  const hoyIso = document.getElementById('hoy').value || new Date().toISOString().slice(0,10);
+  document.getElementById('updated').textContent = 'Cargando…';
+  try {
+    const r = await fetch(`/api/ingresos?hoy=${hoyIso}` + (force ? '&refresh=1' : ''), { cache: 'no-store' });
+    const d = await r.json();
+    if (d.error){
+      return bannerError(r.status === 401
+        ? 'Sesión de Parrotfy expirada. Hay que actualizar la cookie en Render.'
+        : 'Error: ' + d.error);
+    }
+    datosIng = d;
+  } catch(e) {
+    return bannerError('No se pudo conectar con el servidor. Intenta de nuevo en unos segundos.');
+  }
+  document.querySelector('.banner').textContent = datosIng.aviso ? '⚠ ' + datosIng.aviso : BANNER;
+  document.getElementById('updated').textContent = 'Actualizado: ' + new Date().toLocaleTimeString('es-CL');
+
+  document.getElementById('iHoy').textContent = fmt(datosIng.ingresado_hoy);
+  document.getElementById('iHoySub').textContent = hoyIso + ' · Bodega Vending';
+  document.getElementById('iMes').textContent = fmt(datosIng.mes_actual);
+  document.getElementById('iMesSub').textContent = new Date(hoyIso+'T12:00:00').toLocaleDateString('es-CL',{month:'long', year:'numeric'}) + ' · ' + datosIng.n_ingresos_mes + ' Ingresos';
+  document.getElementById('iProd').textContent = fmtQ(datosIng.productos_hoy);
+  document.getElementById('iN').textContent = datosIng.n_ingresos_hoy;
+  document.getElementById('iNSub').textContent = datosIng.n_ingresos_hoy + ' documentos de ingreso en el día';
+  renderIngresos();
+}
+
+function renderIngresos(){
+  if (!datosIng) return;
+  const q = (document.getElementById('buscar').value || '').toLowerCase();
+  const desde = document.getElementById('ingDesde').value;
+  const hasta = document.getElementById('ingHasta').value;
+  const lineas = datosIng.lineas.filter(l =>
+    (!q || l.producto.toLowerCase().includes(q) || (l.documento||'').toLowerCase().includes(q)) && enRango(l.fecha, desde, hasta));
+  document.getElementById('iCount').textContent = lineas.length + ' líneas';
+  document.querySelector('#tablaIng tbody').innerHTML = lineas.map(l=>`
+    <tr style="border-top:1px solid #33415e" onclick="verEgreso(${l.group_id})" title="Ver documento completo">
+      <td>${l.fecha}</td><td>${l.producto}</td><td>${l.documento}</td><td>${l.usuario}</td>
+      <td style="text-align:right">${fmt(l.valor_unitario)}</td><td style="text-align:right">${fmtQ(l.cantidad)}</td>
+      <td style="text-align:right">${fmtQ(l.disponible)}</td><td style="text-align:right">${fmt(l.saldo)}</td></tr>`).join('');
+}
+
+async function loadStock(force){
+  document.getElementById('updated').textContent = 'Cargando…';
+  try {
+    const r = await fetch('/api/stock' + (force ? '?refresh=1' : ''), { cache: 'no-store' });
+    const d = await r.json();
+    if (d.error){
+      return bannerError(r.status === 401
+        ? 'Sesión de Parrotfy expirada. Hay que actualizar la cookie en Render.'
+        : 'Error: ' + d.error);
+    }
+    datosStock = d;
+  } catch(e) {
+    return bannerError('No se pudo conectar con el servidor. Intenta de nuevo en unos segundos.');
+  }
+  document.querySelector('.banner').textContent = datosStock.aviso ? '⚠ ' + datosStock.aviso : BANNER;
+  document.getElementById('updated').textContent = 'Actualizado: ' + new Date().toLocaleTimeString('es-CL');
+
+  document.getElementById('sTotal').textContent = fmtQ(datosStock.n_con_stock);
+  document.getElementById('sCrit').textContent = datosStock.n_criticos;
+  document.getElementById('sCritSub').textContent = 'menos de ' + datosStock.umbral + ' unidades';
+  document.getElementById('sCero').textContent = datosStock.n_sin_stock;
+  document.getElementById('sCeroSub').textContent = datosStock.n_sin_coincidencia + ' sin coincidencia en Parrofy';
+  document.getElementById('sUni').textContent = fmtQ(datosStock.unidades_totales);
+  document.getElementById('sNuevosSub').textContent = 'en todos los productos con stock';
+  document.getElementById('sUpdated').textContent = 'Stock consultado: ' + datosStock.actualizado;
+  renderStock();
+}
+
+function renderStock(){
+  if (!datosStock) return;
+  const q = (document.getElementById('buscarStock').value || '').toLowerCase();
+  const f = document.getElementById('filtroStock').value;
+  let items = datosStock.items;
+  if (f === 'criticos') items = items.filter(i => i.stock < datosStock.umbral);
+  if (f === 'lista') items = items.filter(i => i.en_lista);
+  if (f === 'sin') {
+    items = datosStock.sin_stock.map(i => ({ nombre: i.parrotfy || i.nombre, nombre_lista: i.nombre, stock: 0, en_lista: true }));
+  }
+  items = items.filter(i =>
+    !q || i.nombre.toLowerCase().includes(q) || (i.nombre_lista||'').toLowerCase().includes(q));
+
+  document.querySelector('#tablaStock tbody').innerHTML = items.map(i=>{
+    let estado, color, fondo = '';
+    if (i.stock === 0) { estado = 'SIN STOCK'; color = '#fb923c'; fondo = 'background:rgba(251,146,60,.10)'; }
+    else if (i.stock < datosStock.umbral) { estado = 'ESTADO CRÍTICO'; color = '#f87171'; fondo = 'background:rgba(248,113,113,.10)'; }
+    else { estado = 'OK'; color = 'var(--accent)'; }
+    return `<tr style="border-top:1px solid #33415e;${fondo}">
+      <td>${i.nombre}</td>
+      <td style="text-align:right;font-weight:700">${fmtQ(i.stock)}</td>
+      <td style="color:${color};font-weight:600">${estado}</td></tr>`;
+  }).join('');
 }
 
 async function verEgreso(gid){
@@ -227,7 +462,7 @@ async function verEgreso(gid){
     const r = await fetch('/api/egreso/' + gid, { cache: 'no-store' });
     const d = await r.json();
     if (d.error) { document.getElementById('mProductos').innerHTML = '<tr><td colspan="4">'+d.error+'</td></tr>'; return; }
-    document.getElementById('mTipo').textContent = d.tipo || 'Egreso';
+    document.getElementById('mTipo').textContent = d.tipo || 'Movimiento';
     document.getElementById('mBodega').textContent = d.bodega || 'Bodega Vending';
     document.getElementById('mCreado').textContent = d.creado || '';
     document.getElementById('mDocumento').textContent = d.documento || '';
