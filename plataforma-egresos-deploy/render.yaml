@@ -16,3 +16,5 @@ services:
         sync: false
       - key: APP_PASSWORD
         sync: false
+      - key: TELEGRAM_TOKEN
+        sync: false

@@ -83,30 +83,36 @@ class ParrotfyClient:
             r = self._get("/inventory_movements.json", params=params)
             j = r.json()
             for row in j.get("aaData", []):
-                lines.append(self._parse_line(row))
+                lines.append(self._parse_line(row, movement_type))
             total = j.get("iTotalRecords", 0)
             start += length
             if start >= total or not j.get("aaData"):
                 break
         return lines
 
-    def _parse_line(self, row):
+    def _parse_line(self, row, movement_type="withdraw"):
         fecha = row[0]
         prod_html = row[1]
         doc_html = row[2]
         user_html = row[3]
         valor_unit = row[4]
-        # cantidad y costo quedan en índices 6 y último
         m = re.search(r"inventory_movement_groups/(\d+)", doc_html)
         group_id = int(m.group(1)) if m else None
         doc = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", doc_html)).strip().lstrip("- /").strip()
         soup = BeautifulSoup(prod_html, "html.parser")
-        producto = soup.get_text(" ", strip=True)
-        # cantidad viene como número o "40 (UN)"
+        # El nombre visible puede estar cortado; data-title tiene el nombre completo
+        p = soup.find("p")
+        producto = (p.get("data-title") if p and p.get("data-title") else soup.get_text(" ", strip=True)).strip()
+
         def parse_qty(s):
             m2 = re.search(r"[\d\.]+", str(s).replace(",", ""))
             return float(m2.group()) if m2 else 0
-        cantidad = parse_qty(row[6]) if len(row) > 6 else 0
+
+        ingreso = parse_qty(row[5]) if len(row) > 5 else 0
+        egreso = parse_qty(row[6]) if len(row) > 6 else 0
+        disponible = parse_qty(row[7]) if len(row) > 7 else 0
+        saldo = _parse_money(row[8]) if len(row) > 8 else 0
+        cantidad = ingreso if movement_type == "entry" else egreso
         return {
             "fecha": _parse_date(fecha),
             "producto": producto,
@@ -115,11 +121,56 @@ class ParrotfyClient:
             "usuario": BeautifulSoup(user_html, "html.parser").get_text(" ", strip=True),
             "valor_unitario": _parse_money(valor_unit),
             "cantidad": cantidad,
+            "ingreso": ingreso,
+            "egreso": egreso,
+            "disponible": disponible,
+            "saldo": saldo,
+            "total": cantidad * _parse_money(valor_unit),
         }
 
     def fetch_group_detail(self, group_id: int):
         r = self._get(f"/inventory_movement_groups/{group_id}")
         return parse_group_detail(r.text, group_id)
+
+    def fetch_stock_lines(self, warehouse_id=2):
+        """Stock actual por producto en la bodega (incluye productos con stock 0)."""
+        from bs4 import BeautifulSoup as BS
+        lines = []
+        start = 0
+        length = 100
+        while True:
+            params = {
+                "stock": "true",
+                "sEcho": 1,
+                "iDisplayStart": start,
+                "iDisplayLength": length,
+                "sSearch": "",
+                "iSortCol_0": 1,
+                "sSortDir_0": "true",
+                "date_from": date.today().strftime("%d/%m/%Y"),
+                "date_to": date.today().strftime("%d/%m/%Y"),
+                "category_ids": "",
+                "warehouse_id": warehouse_id,
+                "stock_balance_status": "all",
+            }
+            r = self._get("/inventory_movements.json", params=params)
+            j = r.json()
+            for row in j.get("aaData", []):
+                soup = BS(str(row[1]), "html.parser")
+                p = soup.find("p")
+                nombre = (p.get("data-title") if p and p.get("data-title") else soup.get_text(" ", strip=True)).strip()
+                m = re.search(r"[\d\.]+", re.sub(r"<[^>]+>", "", str(row[6])))
+                stock = float(m.group()) if m else 0
+                lines.append({
+                    "nombre": nombre,
+                    "code": str(row[0]).strip(),
+                    "stock": stock,
+                })
+            total = j.get("iTotalRecords", 0)
+            start += length
+            if start >= total or not j.get("aaData"):
+                break
+        return lines
 
     def fetch_egresos(self, date_from: date, date_to: date, warehouse_id=2):
         from concurrent.futures import ThreadPoolExecutor

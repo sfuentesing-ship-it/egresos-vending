@@ -1,0 +1,534 @@
+[
+ {
+  "nombre": "Winergy 58g",
+  "barcode": "8691707038704"
+ },
+ {
+  "nombre": "Vital sin gas",
+  "barcode": ""
+ },
+ {
+  "nombre": "Vital con gas",
+  "barcode": ""
+ },
+ {
+  "nombre": "Twenty's  variedades",
+  "barcode": ""
+ },
+ {
+  "nombre": "Turron 45g",
+  "barcode": "7802225260657"
+ },
+ {
+  "nombre": "Tostao",
+  "barcode": ""
+ },
+ {
+  "nombre": "Tortazo 70g",
+  "barcode": "7802408002401"
+ },
+ {
+  "nombre": "Tomate Picante 425g",
+  "barcode": ""
+ },
+ {
+  "nombre": "Today Snowball Milky",
+  "barcode": ""
+ },
+ {
+  "nombre": "Today Croissant",
+  "barcode": ""
+ },
+ {
+  "nombre": "Té Lipton Botella 600ml",
+  "barcode": ""
+ },
+ {
+  "nombre": "Supremo",
+  "barcode": ""
+ },
+ {
+  "nombre": "Super 8 29g",
+  "barcode": "7613030612339"
+ },
+ {
+  "nombre": "Suero X",
+  "barcode": ""
+ },
+ {
+  "nombre": "Sopa Inst. 65gr",
+  "barcode": ""
+ },
+ {
+  "nombre": "Snackin Salame 50g",
+  "barcode": "7801916039763"
+ },
+ {
+  "nombre": "Snack tika variedades",
+  "barcode": ""
+ },
+ {
+  "nombre": "Sin sal 425g",
+  "barcode": ""
+ },
+ {
+  "nombre": "Selz 35g",
+  "barcode": "7802225683050"
+ },
+ {
+  "nombre": "Score Energy 500ml",
+  "barcode": "0798190253701"
+ },
+ {
+  "nombre": "Samyang Buldak",
+  "barcode": ""
+ },
+ {
+  "nombre": "Salchichón Cerveza winter",
+  "barcode": ""
+ },
+ {
+  "nombre": "Ruca´s Select variedades",
+  "barcode": ""
+ },
+ {
+  "nombre": "rolls",
+  "barcode": ""
+ },
+ {
+  "nombre": "Rocklets 35g",
+  "barcode": "7790580111526"
+ },
+ {
+  "nombre": "Rice pop tika variedades",
+  "barcode": ""
+ },
+ {
+  "nombre": "Redbull Variedades 250ml",
+  "barcode": ""
+ },
+ {
+  "nombre": "Redbull 250ml",
+  "barcode": ""
+ },
+ {
+  "nombre": "Rapokki con Kimchi Yopokki",
+  "barcode": ""
+ },
+ {
+  "nombre": "Ramitas Marco Polo",
+  "barcode": ""
+ },
+ {
+  "nombre": "Ramita",
+  "barcode": ""
+ },
+ {
+  "nombre": "Ramen Vitelli",
+  "barcode": ""
+ },
+ {
+  "nombre": "Ramen shin",
+  "barcode": ""
+ },
+ {
+  "nombre": "Ramen picante de pimienta Cheongyang y cebolla verde",
+  "barcode": ""
+ },
+ {
+  "nombre": "Ramen Cheesy picante",
+  "barcode": ""
+ },
+ {
+  "nombre": "Ramen Cheesy",
+  "barcode": ""
+ },
+ {
+  "nombre": "Queso Quilpue 150g",
+  "barcode": ""
+ },
+ {
+  "nombre": "Protein Barra 45g",
+  "barcode": "7804673910023"
+ },
+ {
+  "nombre": "Pringles",
+  "barcode": ""
+ },
+ {
+  "nombre": "Pocky Chocolate (pepero)",
+  "barcode": ""
+ },
+ {
+  "nombre": "Pocky Blueberry (pepero)",
+  "barcode": ""
+ },
+ {
+  "nombre": "Pinguinos 80g",
+  "barcode": "7803473500069"
+ },
+ {
+  "nombre": "pepero pocky white cockie",
+  "barcode": ""
+ },
+ {
+  "nombre": "Papas Lays 200g",
+  "barcode": "7802000014703"
+ },
+ {
+  "nombre": "Papas Ketchup",
+  "barcode": ""
+ },
+ {
+  "nombre": "Oreo 108g",
+  "barcode": "7622300722197"
+ },
+ {
+  "nombre": "Nikolo 24g",
+  "barcode": "7802225538480"
+ },
+ {
+  "nombre": "Nik 71g",
+  "barcode": ""
+ },
+ {
+  "nombre": "Natural 425g",
+  "barcode": ""
+ },
+ {
+  "nombre": "Natural 200g",
+  "barcode": ""
+ },
+ {
+  "nombre": "Mortadela lisa san jorgd",
+  "barcode": ""
+ },
+ {
+  "nombre": "Monster 473 ml",
+  "barcode": ""
+ },
+ {
+  "nombre": "Mizos chocolate naranja 25g",
+  "barcode": ""
+ },
+ {
+  "nombre": "Milkis Soda",
+  "barcode": ""
+ },
+ {
+  "nombre": "mentos Chew",
+  "barcode": ""
+ },
+ {
+  "nombre": "Marco Polo",
+  "barcode": ""
+ },
+ {
+  "nombre": "Maní Marco Polo",
+  "barcode": ""
+ },
+ {
+  "nombre": "Lotte Kokkal Corn Snack",
+  "barcode": ""
+ },
+ {
+  "nombre": "Limonada Blister variedades",
+  "barcode": ""
+ },
+ {
+  "nombre": "Leche Protein 200ml",
+  "barcode": ""
+ },
+ {
+  "nombre": "Leche Chocolate 200ml",
+  "barcode": ""
+ },
+ {
+  "nombre": "Latarroz",
+  "barcode": ""
+ },
+ {
+  "nombre": "Laguito 70g",
+  "barcode": "7803403000737"
+ },
+ {
+  "nombre": "Kryzpo 37g",
+  "barcode": "7802800535569"
+ },
+ {
+  "nombre": "KITKAT",
+  "barcode": ""
+ },
+ {
+  "nombre": "Jumex 335ml",
+  "barcode": ""
+ },
+ {
+  "nombre": "Jugo Tetra 200ml",
+  "barcode": ""
+ },
+ {
+  "nombre": "In Kat 26g",
+  "barcode": "7802220140596"
+ },
+ {
+  "nombre": "Gunys Acid Zombie",
+  "barcode": ""
+ },
+ {
+  "nombre": "Gomitas bebeto variedad",
+  "barcode": ""
+ },
+ {
+  "nombre": "Gomitas acidas Guny´s",
+  "barcode": ""
+ },
+ {
+  "nombre": "Golpe 36g",
+  "barcode": "7757174002240"
+ },
+ {
+  "nombre": "Gatorade 500ml",
+  "barcode": "7801620002961"
+ },
+ {
+  "nombre": "Galletas Avena 180g",
+  "barcode": "7802408004054"
+ },
+ {
+  "nombre": "Galleta Club Social",
+  "barcode": ""
+ },
+ {
+  "nombre": "galleta bon o bon",
+  "barcode": "7790040613706"
+ },
+ {
+  "nombre": "galleta bauducco",
+  "barcode": ""
+ },
+ {
+  "nombre": "Frutos secos",
+  "barcode": ""
+ },
+ {
+  "nombre": "frac",
+  "barcode": "7802215512261"
+ },
+ {
+  "nombre": "Effect 330ml",
+  "barcode": ""
+ },
+ {
+  "nombre": "DOUBI PIE CHOCOLATE DUBAI",
+  "barcode": ""
+ },
+ {
+  "nombre": "De Todito",
+  "barcode": ""
+ },
+ {
+  "nombre": "Crazy 30g",
+  "barcode": "8691707096049"
+ },
+ {
+  "nombre": "Corona de Maíz Cho (Snack de Maíz Cubierto de Avellanas) 66 g",
+  "barcode": ""
+ },
+ {
+  "nombre": "Coca-Cola 500ml",
+  "barcode": ""
+ },
+ {
+  "nombre": "Coca Cola Zero 500 ml",
+  "barcode": ""
+ },
+ {
+  "nombre": "Chokita 30g",
+  "barcode": "7613287755810"
+ },
+ {
+  "nombre": "choco biscuit",
+  "barcode": "7891962060361"
+ },
+ {
+  "nombre": "Chocman 33g",
+  "barcode": "7802215303401"
+ },
+ {
+  "nombre": "Chirlito 25g",
+  "barcode": "2228408003654"
+ },
+ {
+  "nombre": "Chicken Flavor Ramen Bowl Cheese Flavor",
+  "barcode": ""
+ },
+ {
+  "nombre": "Cereal Wild protein",
+  "barcode": ""
+ },
+ {
+  "nombre": "CCU 500ml",
+  "barcode": ""
+ },
+ {
+  "nombre": "capri",
+  "barcode": ""
+ },
+ {
+  "nombre": "Cantabile Vanilla Flavor Americano 230ml",
+  "barcode": ""
+ },
+ {
+  "nombre": "CANTABILE Apple Ade 230ml",
+  "barcode": ""
+ },
+ {
+  "nombre": "Cafe Frappuccino Clasico Starbucks 280 ml",
+  "barcode": ""
+ },
+ {
+  "nombre": "Cafe Frappuccino Caramelo Starbucks 280 ml",
+  "barcode": ""
+ },
+ {
+  "nombre": "Café en maquina variedades",
+  "barcode": ""
+ },
+ {
+  "nombre": "Bubble Milk Tea Thai Flavor",
+  "barcode": ""
+ },
+ {
+  "nombre": "Bubble Milk Tea Taro",
+  "barcode": ""
+ },
+ {
+  "nombre": "Bubble Milk Tea Strawberry",
+  "barcode": ""
+ },
+ {
+  "nombre": "Bubble Milk Tea Original",
+  "barcode": ""
+ },
+ {
+  "nombre": "bubble milk tea matcha",
+  "barcode": ""
+ },
+ {
+  "nombre": "Bubble Milk Tea Brown",
+  "barcode": ""
+ },
+ {
+  "nombre": "Brownie Nutra Bien 62g",
+  "barcode": ""
+ },
+ {
+  "nombre": "Braunichoc 35g",
+  "barcode": "7803525000356"
+ },
+ {
+  "nombre": "Bling Blooster",
+  "barcode": ""
+ },
+ {
+  "nombre": "Binatur Protein 330ml",
+  "barcode": ""
+ },
+ {
+  "nombre": "Bigtime 11gr",
+  "barcode": "78011748"
+ },
+ {
+  "nombre": "Bebidas Naruto variedades",
+  "barcode": ""
+ },
+ {
+  "nombre": "Bebida lata 350ml",
+  "barcode": ""
+ },
+ {
+  "nombre": "Bebida Coreana Cantabile Naranja 230 Ml",
+  "barcode": ""
+ },
+ {
+  "nombre": "Bebida Cantabile Strawberry Ade en bolsa de 230 ml",
+  "barcode": ""
+ },
+ {
+  "nombre": "Bauducco mini budin",
+  "barcode": ""
+ },
+ {
+  "nombre": "Barra proteica under five",
+  "barcode": ""
+ },
+ {
+  "nombre": "Barra proteica Tika",
+  "barcode": ""
+ },
+ {
+  "nombre": "Atun agua X2 160g",
+  "barcode": ""
+ },
+ {
+  "nombre": "Atun agua 160g",
+  "barcode": ""
+ },
+ {
+  "nombre": "Atun aceite X2 160g",
+  "barcode": ""
+ },
+ {
+  "nombre": "Atun aceite 160g",
+  "barcode": ""
+ },
+ {
+  "nombre": "Aloe Vera",
+  "barcode": ""
+ },
+ {
+  "nombre": "Alfajor Dulcedia 60g",
+  "barcode": ""
+ },
+ {
+  "nombre": "Alfajor Bon o Bon",
+  "barcode": ""
+ },
+ {
+  "nombre": "Albedo SALAME PESTO",
+  "barcode": ""
+ },
+ {
+  "nombre": "Albedo Mozzarella Pesto",
+  "barcode": ""
+ },
+ {
+  "nombre": "Albedo Coleslaw",
+  "barcode": ""
+ },
+ {
+  "nombre": "Albedo Ave Pimentón",
+  "barcode": ""
+ },
+ {
+  "nombre": "Albedo Ave Mayo",
+  "barcode": ""
+ },
+ {
+  "nombre": "AkaPro Protein Shake (330 ml)",
+  "barcode": ""
+ },
+ {
+  "nombre": "Ahumadito",
+  "barcode": ""
+ },
+ {
+  "nombre": "3 Negritos 24g",
+  "barcode": "7802200009028"
+ },
+ {
+  "nombre": "+ Sabores 500ml",
+  "barcode": ""
+ }
+]
