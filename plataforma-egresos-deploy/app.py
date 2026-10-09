@@ -230,8 +230,20 @@ def api_resumen():
         hoy = parse_d(request.args.get("hoy", date.today().strftime("%Y-%m-%d")))
     except ValueError:
         hoy = date.today()
-    desde = min(hoy.replace(day=1), hoy - timedelta(days=30))
-    hasta = hoy + timedelta(days=1)
+    base_desde = min(hoy.replace(day=1), hoy - timedelta(days=30))
+    base_hasta = hoy + timedelta(days=1)
+    desde, hasta = base_desde, base_hasta
+    r_desde = request.args.get("desde")
+    r_hasta = request.args.get("hasta")
+    if r_desde and r_hasta:
+        try:
+            desde = min(base_desde, parse_d(r_desde))
+            hasta = max(base_hasta, parse_d(r_hasta) + timedelta(days=1))
+        except ValueError:
+            desde, hasta = base_desde, base_hasta
+    # límite de seguridad: máximo 240 días por consulta
+    if (hasta - desde).days > 240:
+        desde = hasta - timedelta(days=240)
     force = request.args.get("refresh") == "1"
     aviso = None
     try:
@@ -313,8 +325,19 @@ def api_ingresos():
         hoy = parse_d(request.args.get("hoy", date.today().strftime("%Y-%m-%d")))
     except ValueError:
         hoy = date.today()
-    desde = min(hoy.replace(day=1), hoy - timedelta(days=30))
-    hasta = hoy + timedelta(days=1)
+    base_desde = min(hoy.replace(day=1), hoy - timedelta(days=30))
+    base_hasta = hoy + timedelta(days=1)
+    desde, hasta = base_desde, base_hasta
+    r_desde = request.args.get("desde")
+    r_hasta = request.args.get("hasta")
+    if r_desde and r_hasta:
+        try:
+            desde = min(base_desde, parse_d(r_desde))
+            hasta = max(base_hasta, parse_d(r_hasta) + timedelta(days=1))
+        except ValueError:
+            desde, hasta = base_desde, base_hasta
+    if (hasta - desde).days > 240:
+        desde = hasta - timedelta(days=240)
     force = request.args.get("refresh") == "1"
     aviso = None
     try:

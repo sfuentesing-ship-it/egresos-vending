@@ -23,6 +23,9 @@ class SessionExpiredError(Exception):
 class ParrotfyClient:
     def __init__(self, tenant: str, cookie: str, csrf: str):
         self.base = BASE.format(tenant=tenant)
+        # Limpiar espacios/saltos de línea que se cuelan al pegar las credenciales
+        csrf = re.sub(r"[\r\n\t]+", "", str(csrf)).strip()
+        cookie = re.sub(r"[\r\n\t]+", " ", str(cookie)).strip()
         self.session = requests.Session()
         self.session.headers.update({
             **HEADERS,
@@ -54,6 +57,10 @@ class ParrotfyClient:
                     time.sleep(min(wait or (2 ** attempt) * 2, 60))
                     last = requests.HTTPError(f"HTTP {r.status_code}")
                     continue
+                # Si Parrotfy devuelve HTML (página de login) la sesión expiró
+                ctype = r.headers.get("Content-Type", "")
+                if "text/html" in ctype:
+                    raise SessionExpiredError("Sesión de Parrotfy expirada o cookie inválida")
                 self._check(r)
                 return r
             except (requests.ConnectionError, requests.Timeout) as e:
