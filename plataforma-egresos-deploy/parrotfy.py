@@ -57,9 +57,9 @@ class ParrotfyClient:
                     time.sleep(min(wait or (2 ** attempt) * 2, 60))
                     last = requests.HTTPError(f"HTTP {r.status_code}")
                     continue
-                # Si Parrotfy devuelve HTML (página de login) la sesión expiró
+                # Si un endpoint .json devuelve HTML (página de login) la sesión expiró
                 ctype = r.headers.get("Content-Type", "")
-                if "text/html" in ctype:
+                if path.endswith(".json") and "text/html" in ctype:
                     raise SessionExpiredError("Sesión de Parrotfy expirada o cookie inválida")
                 self._check(r)
                 return r
